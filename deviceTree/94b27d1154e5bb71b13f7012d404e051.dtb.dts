@@ -1,0 +1,30 @@
+/dts-v1/;
+
+/ {
+
+	fragment@0 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+			bootargs_ext = "androidboot.boot_devices=fe310000.sdhci,fe330000.nandc";
+		};
+	};
+
+	fragment@1 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+			mode-bootloader = <0x5242c309>;
+			mode-charge = <0x5242c30b>;
+			mode-fastboot = <0x5242c303>;
+			mode-loader = <0x5242c301>;
+			mode-normal = <0x5242c300>;
+			mode-recovery = <0x5242c303>;
+		};
+	};
+
+	__fixups__ {
+		chosen = "/fragment@0:target:0";
+		reboot_mode = "/fragment@1:target:0";
+	};
+};

@@ -1,0 +1,125 @@
+/dts-v1/;
+
+/memreserve/	0x00007fcaea052000 0x0000000000000a00;
+/ {
+	version = <0x00>;
+	totalsize = <0x1c6000>;
+	timestamp = <0x6123591d>;
+	description = "FIT Image with ATF/OP-TEE/U-Boot";
+	#address-cells = <0x01>;
+
+	images {
+
+		uboot {
+			data-size = <0x127af8>;
+			data-position = <0xe00>;
+			description = "U-Boot(64-bit)";
+			type = "standalone";
+			arch = "arm64";
+			os = "U-Boot";
+			compression = "none";
+			load = <0xa00000>;
+
+			hash {
+				value = <0x39e9cf5a 0x5a50a123 0xd37aa37d 0x72abe8df 0x3aa40231 0x979e9d73 0xcb879a46 0x89dd843>;
+				algo = "sha256";
+			};
+		};
+
+		atf-1 {
+			data-size = <0x2a763>;
+			data-position = <0x128a00>;
+			description = "ARM Trusted Firmware";
+			type = "firmware";
+			arch = "arm64";
+			os = "arm-trusted-firmware";
+			compression = "none";
+			load = <0x40000>;
+
+			hash {
+				value = <0xdb3c1d49 0x6d143a1d 0xed27f9ac 0x3cabff24 0x5bdac917 0xe7428e35 0x44e3acd4 0xf998a06a>;
+				algo = "sha256";
+			};
+		};
+
+		atf-2 {
+			data-size = <0x2000>;
+			data-position = <0x153200>;
+			description = "ARM Trusted Firmware";
+			type = "firmware";
+			arch = "arm64";
+			os = "arm-trusted-firmware";
+			compression = "none";
+			load = <0xfdcc9000>;
+
+			hash {
+				value = <0x352ad13b 0xf55c6594 0x9a7270a3 0x714a18db 0xbf69cdd7 0x82bfc931 0x42156c3d 0x6c1619da>;
+				algo = "sha256";
+			};
+		};
+
+		atf-3 {
+			data-size = <0x1d80>;
+			data-position = <0x155200>;
+			description = "ARM Trusted Firmware";
+			type = "firmware";
+			arch = "arm64";
+			os = "arm-trusted-firmware";
+			compression = "none";
+			load = <0xfdcd0000>;
+
+			hash {
+				value = <0x954e56c9 0xaca9b298 0x3f6ff868 0xd91ecac0 0x650859ca 0x17a21466 0x47361a4 0xa519f479>;
+				algo = "sha256";
+			};
+		};
+
+		optee {
+			data-size = <0x6b390>;
+			data-position = <0x157000>;
+			description = "OP-TEE";
+			type = "firmware";
+			arch = "arm64";
+			os = "op-tee";
+			compression = "none";
+			load = "\b@\0";
+
+			hash {
+				value = <0xb8cddafa 0xb0c4e20b 0x23a2eec4 0xc41bdb25 0x2325b693 0x33c07f2d 0x5a174428 0x468c850>;
+				algo = "sha256";
+			};
+		};
+
+		fdt {
+			data-size = <0x37b9>;
+			data-position = <0x1c2400>;
+			description = "U-Boot dtb";
+			type = "flat_dt";
+			arch = "arm64";
+			compression = "none";
+
+			hash {
+				value = <0x9679fe2a 0x45776f35 0x494f95cc 0xbf57831f 0x94c54cc9 0xb3766a2 0xf7371e16 0x9ac928fb>;
+				algo = "sha256";
+			};
+		};
+	};
+
+	configurations {
+		default = "conf";
+
+		conf {
+			description = "rk3568-evb";
+			rollback-index = <0x00>;
+			firmware = "atf-1";
+			loadables = "uboot\0atf-2\0atf-3\0optee";
+			fdt = "fdt";
+
+			signature {
+				algo = "sha256,rsa2048";
+				key-name-hint = "dev";
+				sign-images = "fdt\0firmware\0loadables";
+			};
+		};
+	};
+};
